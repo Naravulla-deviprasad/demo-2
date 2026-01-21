@@ -1,0 +1,78 @@
+:root {
+  --bg: #0d0d0d;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #00ffff;
+  --accent2: #ff00ff;
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, 0.6);
+  --danger: #ff4d4d;
+  --radius: 14px;
+  --shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+/* Reset */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: flex-start; padding: 20px; }
+
+/* Layout */
+.shell { display: flex; gap: 20px; max-width: 1200px; width: 100%; }
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); backdrop-filter: blur(12px); }
+.game { flex: 2; }
+.sidebar { flex: 0.6; display: flex; flex-direction: column; gap: 16px; }
+
+/* Header */
+.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.brand { display: flex; gap: 10px; align-items: center; }
+.logo { width: 48px; height: 48px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 50%; font-weight: bold; font-size: 24px; display: flex; align-items: center; justify-content: center; }
+.meta { font-size: 0.85rem; color: var(--muted); }
+
+/* Question Card */
+.qcard { margin-top: 8px; }
+.qtop { display: flex; justify-content: space-between; align-items: center; }
+.progress { display: flex; gap: 12px; align-items: center; }
+.qnum { font-weight: bold; }
+.score { font-weight: bold; }
+.small { font-size: 0.8rem; color: var(--muted); }
+
+/* Timer */
+.timer-ring { position: relative; width: 64px; height: 64px; }
+#timeLabel { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 14px; font-weight: bold; color: var(--muted); pointer-events: none; }
+
+/* Question */
+.question { margin: 16px 0; font-size: 1.3rem; color: var(--accent); font-weight: bold; }
+
+/* Options */
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.opts button { display: block; width: 100%; background: #333; border: none; border-radius: 8px; padding: 12px; color: #ffffff; font-size: 1rem; text-align: left; cursor: pointer; transition: background 0.2s ease; text-shadow: 0 0 5px rgba(255,255,255,0.4); }
+.opts button:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--accent); box-shadow: 0 0 10px var(--accent); }
+.opts button.correct { outline: 3px solid rgba(16,185,129,0.16); box-shadow: 0 0 12px rgba(16,185,129,0.08); }
+.opts button.wrong { outline: 3px solid rgba(255,77,77,0.12); box-shadow: 0 0 12px rgba(255,77,77,0.06); }
+
+/* Hint */
+.hint { margin-top: 8px; font-size: 0.85rem; color: var(--accent2); }
+
+/* Controls */
+.controls { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+.left-controls { display: flex; gap: 8px; }
+
+.btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; padding: 8px 14px; color: black; font-weight: bold; border-radius: var(--radius); cursor: pointer; }
+.btn:hover { opacity: 0.95; }
+.ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 8px 14px; border-radius: var(--radius); cursor: pointer; }
+.ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Sidebar */
+.stat { background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: var(--radius); }
+.label { font-size: 0.8rem; color: var(--muted); }
+.value { font-size: 1.2rem; font-weight: bold; }
+.lifelines { display: flex; flex-direction: column; gap: 6px; }
+.lifeline { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border); padding: 6px; border-radius: var(--radius); cursor: pointer; color: #ffffff; transition: all 0.2s ease; }
+.lifeline:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--accent); }
+.leaderboard { background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: var(--radius); color: #ffffff; }
+
+/* Admin styling tweaks */
+.admin-section h4 { margin-bottom:6px; color:var(--muted); }
+.admin-section input, .admin-section select { padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.25); color:var(--text); }
+
+/* Responsive */
+@media (max-width: 768px) { .shell { flex-direction: column; } .header { flex-direction: column; gap:10px; } }

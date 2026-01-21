@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Neon Quiz — Interactive MCQ Game</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <div class="shell">
+    <div class="card game">
+      <div class="header">
+        <div class="brand">
+          <div class="logo">Q</div>
+          <div>
+            <h1>Neon Quiz</h1>
+            <div class="meta">Fun + fast multiple-choice quiz • Press 1–4 to answer</div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+          <div class="meta">Category: <select id="categorySelect"></select></div>
+
+          <!-- Admin login (visible button, panel hidden) -->
+          <div id="adminLogin" style="margin:4px 0;">
+            <button id="showAdminLoginBtn" class="btn">Login as Admin</button>
+          </div>
+
+          <!-- Start / End -->
+          <button id="startBtn" class="btn">Start Quiz ▶</button>
+        </div>
+      </div>
+
+      <!-- Admin Panel (hidden by default) -->
+      <div id="adminPanel" style="display:none; margin:12px 0; padding:12px; border:1px solid #ccc; border-radius:10px;">
+        <h3>Admin Panel</h3>
+
+        <!-- CATEGORY MANAGEMENT -->
+        <div class="admin-section">
+          <h4>Category Management</h4>
+          <input id="newCategoryName" placeholder="New Category Name" style="width:60%;margin-right:8px;">
+          <button id="addCategoryBtn" class="btn">Add Category</button>
+          <br><br>
+          <select id="categoryList" style="width:60%;"></select>
+          <button id="deleteCategoryBtn" class="ghost" style="margin-left:8px;">Delete Selected Category</button>
+        </div>
+
+        <hr>
+
+        <!-- QUESTION MANAGEMENT -->
+        <div class="admin-section" style="margin-top:8px;">
+          <h4>Add / Edit Question</h4>
+          <input id="adminQ" placeholder="Question" style="width:100%;margin:6px 0;"><br>
+          <input id="opt1" placeholder="Option 1" style="width:48%;margin:6px 1% 6px 0;"><input id="opt2" placeholder="Option 2" style="width:48%;margin:6px 0 6px 1%;"><br>
+          <input id="opt3" placeholder="Option 3" style="width:48%;margin:6px 1% 6px 0;"><input id="opt4" placeholder="Option 4" style="width:48%;margin:6px 0 6px 1%;"><br>
+          <input id="correctIdx" type="number" min="0" max="3" placeholder="Correct option index (0-3)" style="width:32%;margin:6px 1% 6px 0;">
+          <input id="points" type="number" placeholder="Points" value="10" style="width:32%;margin:6px 1%;">
+          <input id="hintInput" placeholder="Hint" style="width:32%;margin:6px 0 6px 1%;"><br>
+          <div style="margin-top:8px;">
+            <button id="addQBtn" class="btn">Add Question</button>
+            <button id="editQBtn" class="btn ghost">Save Changes</button>
+            <button id="closeAdmin" class="ghost">Close Admin</button>
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- EXISTING QUESTIONS -->
+        <div class="admin-section" style="margin-top:8px;">
+          <h4>Existing Questions</h4>
+          <select id="questionList" size="6" style="width:100%;"></select><br>
+          <button id="loadQBtn" class="btn">Load for Editing</button>
+          <button id="deleteQBtn" class="ghost">Delete Selected Question</button>
+        </div>
+      </div>
+
+      <div class="qcard" id="qcard" aria-live="polite">
+        <div class="qtop">
+          <div class="progress">
+            <div class="qnum" id="qnum">Q 1 / 8</div>
+            <div class="score small">Score: <span id="score">0</span></div>
+          </div>
+          <div class="timer-ring" title="Time left">
+            <svg class="timer" viewBox="0 0 36 36" width="64" height="64">
+              <path id="timerBg" d="M18 2a16 16 0 1 0 0 32a16 16 0 1 0 0-32" 
+                    fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="3"></path>
+              <path id="timerArc" d="M18 2a16 16 0 1 0 0 32a16 16 0 1 0 0-32" 
+                    fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round" 
+                    stroke-dasharray="0 100"></path>
+              <defs>
+                <linearGradient id="g">
+                  <stop offset="0" stop-color="var(--accent)" />
+                  <stop offset="1" stop-color="var(--accent2)" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div id="timeLabel">15s</div>
+          </div>
+        </div>
+
+        <div class="question" id="question">Loading question...</div>
+        <div class="opts" id="opts" role="list"></div>
+        <div class="hint" id="hint"></div>
+
+        <div class="controls">
+          <div class="left-controls">
+            <button class="btn" id="nextBtn">Next ⏭</button>
+            <button class="ghost" id="pauseBtn">Pause ⏸</button>
+          </div>
+          <div class="small">Shortcuts: 1–4 to pick, H = hint, F = 50/50, K = skip</div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="small">Built for learning — responsive & accessible</div>
+        <div class="small">Keyboard friendly • Local high-scores</div>
+      </div>
+    </div>
+
+    <aside class="card sidebar">
+      <div class="stat">
+        <div class="label">Lives</div>
+        <div class="value" id="lives">3</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">Question Timer</div>
+        <div class="value" id="qtime">15s</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">Lifelines</div>
+        <div class="lifelines">
+          <button class="lifeline" id="fifty">50/50 <span id="fiftyCount">×2</span></button>
+          <button class="lifeline" id="hintBtn">Hint <span id="hintCount">×2</span></button>
+          <button class="lifeline" id="skip">Skip <span id="skipCount">×2</span></button>
+        </div>
+      </div>
+
+      <div class="leaderboard">
+        <div class="label">High Scores</div>
+        <ol id="highscores" style="margin:8px 0 0 0;padding-left:18px"></ol>
+        <button class="ghost" id="clearScores">Clear</button>
+      </div>
+    </aside>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
